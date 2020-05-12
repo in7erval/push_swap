@@ -15,9 +15,7 @@
 t_printf		*init_data(const char *format, int *a)
 {
 	t_printf	*data;
-	int			i;
-
-	i = 0;
+	
 	*a = 0;
 	if (!(data = (t_printf *)malloc(sizeof(t_printf))))
 		return (NULL);

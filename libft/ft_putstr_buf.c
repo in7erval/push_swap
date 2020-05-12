@@ -14,9 +14,6 @@
 
 void	ft_putstr_pft(char buf[BUFF_SIZE], t_printf *data)
 {
-	int i;
-
-	i = 0;
 	write(1, buf, data->count_buf);
 	data->count_buf = 0;
 }

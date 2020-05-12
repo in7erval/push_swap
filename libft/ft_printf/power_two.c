@@ -118,15 +118,7 @@ static void	pow_two_over_64(char *big_num, char *big_two, int power)
 void		add_pow_two(char big_num[NUM_SIZE], int power)
 {
 	char	big_two[NUM_SIZE];
-	int		i;
-	int		j;
-	int		flag;
-	int		prev_flag;
 
-	j = NUM_SIZE - 1;
-	i = 0;
-	flag = 0;
-	prev_flag = 0;
 	ft_memset(big_two, -1, NUM_SIZE);
 	if (power < 64)
 		pow_two_under_64(power, big_num);
