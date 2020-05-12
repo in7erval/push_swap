@@ -85,7 +85,6 @@ void			ft_fillbegin(t_printf *data, intmax_t num, char *s, int digits)
 void			ft_fillend(t_printf *data, intmax_t num, char *s, int digits)
 {
 	int i;
-	int j;
 	int prec;
 	int max;
 	int width;
@@ -103,8 +102,6 @@ void			ft_fillend(t_printf *data, intmax_t num, char *s, int digits)
 	if ((data->flags >> TO_ZERO) % 2)
 		fill_zeros(&width, max, &i, s);
 	fill_zeros(&prec, digits, &i, s);
-	j = ((data->flags >> TO_PLUS) % 2 ||
-			(data->flags >> TO_SPACE) % 2 || num < 0) ? 1 : 0;
 	if (!(data->precision == 0 && num == 0))
 		ft_itoa_di(s, digits, num, &i);
 	ft_putstr_buf(s, data->buf, data);
