@@ -118,10 +118,8 @@ int			put_data_zero_o_prec(t_printf *data, int *k)
 int			put_data_zero_o(t_printf *data, int *k)
 {
 	int width;
-	int prec;
 	int max;
 
-	prec = data->precision;
 	width = data->width;
 	if (data->precision != NO_PRECISION)
 		return (put_data_zero_o_prec(data, k));
