@@ -58,7 +58,7 @@ typedef struct	s_opr
 int 	ft_abs(int i);
 void 	print_error(char *s);
 void	add_front(t_stack *stack, t_elem *elem);
-void	add_back(t_stack *stack, int elem);
+void	add_back(t_stack *stack, t_elem *elem);
 void	init_stacks(t_stack **a, t_stack **b, int argc, char **argv);
 void	push(t_stack *from, t_stack *to, t_list **oprs, char *str);
 t_elem	*pop(t_stack *b);
@@ -68,7 +68,7 @@ void	reverse_rotate(t_stack *buf, t_list **oprs, char *str);
 void	rotate(t_stack *buf, t_list **oprs, char *str);
 void	print_stacks(t_stack *a, t_stack *b);
 int		find_max(t_elem *a, t_elem *b);
-void	free_stacks(t_stack **a, t_stack **b);
+void	free_stack(t_stack **stack);
 void	free_list(t_list **list);
 
 void	print_space(int a, int max);

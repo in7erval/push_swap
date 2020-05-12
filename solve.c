@@ -12,16 +12,69 @@
 
 #include "push_swap.h"
 
-int 	try_to_sa(t_stack *a)
+int 	count_keep(t_stack *stack)
+{
+	t_elem *buf;
+	int count;
+
+	count = 0;
+	if (stack->head)
+	{
+		buf = stack->head;
+		if (buf->keep == 1)
+			count++;
+		buf = buf->next;
+		while (buf != stack->head)
+		{
+			if (buf->keep == 1)
+				count++;
+			buf = buf->next;
+		}
+	}
+	return count;
+}
+
+t_stack *clone_stack(t_stack *a)
+{
+	t_stack *clone;
+	t_elem *h;
+	t_elem *new;
+
+	clone = (t_stack *)malloc(sizeof(t_stack));
+	clone->size = 0;
+	h = a->head->prev;
+	while (h != a->head)
+	{
+		new = (t_elem*)malloc(sizeof(t_elem));
+		new->value = h->value;
+		new->index = h->index;
+		new->next = new;
+		new->prev = new;
+		new->keep = h->keep;
+		add_front(clone, new);
+		h = h->prev;
+	}
+	new = (t_elem*)malloc(sizeof(t_elem));
+	new->value = h->value;
+	new->index = h->index;
+	new->next = new;
+	new->prev = new;
+	new->keep = h->keep;
+	add_front(clone, new);
+	return clone;
+}
+
+int 	try_to_sa(t_stack *a, int (*markup)(t_stack *, t_elem *))
 {
 	int count1;
 	int count2;
+	t_stack *c;
 
-	count1 = markup_all(a, greater);
-	swap(a, NULL, NULL);
-	count2 = markup_all(a, greater);
-	swap(a, NULL, NULL);
-	markup_all(a, greater);
+	count1 = count_keep(a);
+	c = clone_stack(a);
+	swap(c, NULL, NULL);
+	count2 = markup_all(c, markup);
+	free_stack(&c);
 	if (count2 > count1)
 		return 1;
 	return 0;
@@ -47,17 +100,17 @@ int 	contains_not_keep(t_elem *head)
 	return 0;
 }
 
-void	push_to_b(t_stack *a, t_stack *b, t_list **oprs)
+void	push_to_b(t_stack *a, t_stack *b, t_list **oprs, int (*markup)(t_stack *, t_elem *))
 {
 	t_elem *buf;
 
 	buf = a->head;
 	while (contains_not_keep(a->head))
 	{
-		if (try_to_sa(a))
+		if (try_to_sa(a, markup))
 		{
 			swap(a, oprs, "sa");
-			markup_all(a, greater);
+			markup_all(a, markup);
 		}
 		else if (a->head->keep == -1)
 			push(a, b, oprs, "pb");
@@ -204,18 +257,15 @@ t_list	*solve(t_stack *a, t_stack *b, int (*markup)(t_stack *, t_elem *))
 	t_list *list_operations;
 
 	list_operations = NULL;
-	print_stacks(a, b);
-	put_indexes(a);
 	markup_all(a, markup);
-	push_to_b(a, b, &list_operations);
+	push_to_b(a, b, &list_operations, markup);
+
 	while (b->size != 0)
 		do_opr(count_opr_b(a, b), a, b, &list_operations);
+
 	align_a(a, &list_operations);
-	print_stacks(a, b);
 	return list_operations;
 }
-
-
 
 int		markup_all(t_stack *a, int (*markup)(t_stack *, t_elem *))
 {

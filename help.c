@@ -71,15 +71,15 @@ void	free_list(t_list **list)
 	}
 }
 
-void	free_stacks(t_stack **a, t_stack **b)
+void	free_stack(t_stack **stack)
 {
 	t_elem *del;
 	t_elem *buf;
 
-	if ((*a)->head)
+	if ((*stack)->head && (*stack)->size > 0)
 	{
-		buf = (*a)->head->next;
-		while (buf != (*a)->head)
+		buf = (*stack)->head->next;
+		while (buf != (*stack)->head)
 		{
 			del = buf;
 			buf = buf->next;
@@ -87,40 +87,19 @@ void	free_stacks(t_stack **a, t_stack **b)
 		}
 		free(buf);
 	}
-	free(*a);
-	if ((*b)->head && (*b)->size > 0)
-	{
-		buf = (*b)->head->next;
-		while (buf != (*b)->head)
-		{
-			del = buf;
-			buf = buf->next;
-			free(del);
-		}
-		free(buf);
-	}
-	free(*b);
-
+	free(*stack);
 }
 
-void	add_back(t_stack *stack, int elem)
+void	add_back(t_stack *stack, t_elem *elem)
 {
-	t_elem *e;
-	t_elem *buf;
-
-	e = (t_elem *)malloc(sizeof(t_elem));
-	e->value = elem;
-	e->next = e;
-	e->prev = e;
-	e->keep = -1;
-	if (stack->head == NULL)
-		stack->head = e;
-	else {
-		buf = stack->head;
-		buf->prev->next = e;
-		e->prev = buf->prev;
-		e->next = buf;
-		buf->prev = e;
+	if (stack->head == NULL || stack->size == 0)
+		stack->head = elem;
+	else
+	{
+		stack->head->prev->next = elem;
+		elem->prev = stack->head->prev;
+		elem->next = stack->head;
+		stack->head->prev = elem;
 	}
 	stack->size++;
 }
@@ -162,6 +141,7 @@ void	add_n_operations(t_list *oprs, int n, char *str)
 void	init_stacks(t_stack **a, t_stack **b, int argc, char **argv)
 {
 	int i;
+	char **split;
 
 	if (argc == 1)
 		print_error("Error");
@@ -173,20 +153,18 @@ void	init_stacks(t_stack **a, t_stack **b, int argc, char **argv)
 	if (argc == 2)
 	{
 		i = count_words(argv[1], ' ') - 1;
-		argv = ft_strsplit(argv[1], ' ');
+		split = ft_strsplit(argv[1], ' ');
 		while (i >= 0)
 		{
-			add_front(*a, new_element(ft_atoi(argv[i])));
-			free(argv[i]);
+			add_front(*a, new_element(ft_atoi(split[i])));
+			free(split[i]);
 			i--;
 		}
-		free(argv);
+		free(split);
 	} else
-		while (i > 0)
-		{
-			add_front(*a, new_element(ft_atoi(argv[i])));
-			i--;
-		}
+		while (i-- > 0)
+			add_front(*a, new_element(ft_atoi(argv[i--])));
+	put_indexes(*a);
 }
 
 t_elem	*pop(t_stack *stack)

@@ -73,7 +73,7 @@ int main(int argc, char **argv)
 		}
 		free(str);
 		i++;
-		//print_stacks(a, b);
+		print_stacks(a, b);
 	}
 	free(str);
 	//print_stacks(a, b);
@@ -82,7 +82,8 @@ int main(int argc, char **argv)
 	else
 		ft_putendl("KO");
 	//ft_printf("Count: %d\n", i);
-	free_stacks(&a, &b);
+	free_stack(&a);
+	free_stack(&a);
 	return (0);
 }
 
