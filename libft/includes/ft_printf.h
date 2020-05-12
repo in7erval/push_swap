@@ -19,6 +19,7 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <stdarg.h>
+# include <stdint.h>
 # include <wchar.h>
 # include <limits.h>
 # define NO_PRECISION -1
