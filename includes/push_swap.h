@@ -15,6 +15,7 @@
 
 #include "libft.h"
 #include "ft_printf.h"
+#include "mlx.h"
 
 #define RA	1
 #define RB	2
@@ -28,6 +29,29 @@
 #define SB	10
 #define SS	11
 
+#define WIDTH 500
+#define HEIGHT 500
+#define KEY_ESC 53
+#define KEY_ENTER 36
+#define KEY_A 0
+#define KEY_RIGHT 124
+#define KEY_LEFT 123
+#define KEY_DELETE 51
+
+# define RED 0xff000
+# define ORANGE 0xff4f00
+# define YELLOW 0xf7ff00
+# define GREEN 0x0bda51
+# define LIGHT_BLUE 0x1e90ff
+# define BLUE 0x0099EE
+# define VIOLET 0x4d0092
+
+# define DARK_VIOLET 0x1f1b24
+# define BACKGROUND_SURFACE 0x121212
+# define PRIMARY_VIOLET 0xbb86fc
+# define DARK_BLUE 0x3700b3
+# define DARK_TURQUOISE 0x03dac5
+
 typedef struct			s_elem
 {
 	int					value;
@@ -35,6 +59,7 @@ typedef struct			s_elem
 	struct s_elem		*next;
 	struct s_elem		*prev;
 	int 				keep;
+	int					color;
 }						t_elem;
 
 typedef struct	s_stack
@@ -53,13 +78,38 @@ typedef struct	s_opr
 	t_elem 		*elem;
 }				t_opr;
 
+typedef	struct	s_mlx
+{
+	void		*mlx;
+	void		*win;
+	void		*img;
+	char		*data_addr;
+	int			bits_per_pixel;
+	int			size_line;
+	int			endian;
+	t_list 		*oprs;
+	t_list		*cur;
+	t_stack		*a;
+	t_stack 	*b;
+	int 		color_from;
+	int 		color_to;
+	size_t		max_index;
+	size_t 		width;
+	size_t		height;
+}				t_mlx;
 
+typedef	struct		s_point
+{
+	int				x;
+	int				y;
+	int				color;
+}					t_point;
 
 int 	ft_abs(int i);
 void 	print_error(char *s);
 void	add_front(t_stack *stack, t_elem *elem);
 void	add_back(t_stack *stack, t_elem *elem);
-void	init_stacks(t_stack **a, t_stack **b, int argc, char **argv);
+int		init_stacks(t_stack **a, t_stack **b, int argc, char **argv);
 void	push(t_stack *from, t_stack *to, t_list **oprs, char *str);
 t_elem	*pop(t_stack *b);
 void	swap(t_stack *stack, t_list **oprs, char *str);
@@ -77,8 +127,6 @@ int		count_words(const char *str, char c);
 
 t_list	*solve(t_stack *a, t_stack *b, int (*markup)(t_stack *, t_elem *));
 void	put_indexes(t_stack *a);
-void	add_n_operations(t_list *oprs, int n, char *str);
-void	print_stack_debug(t_stack *stack);
 void	sort_array(int *array, int size);
 void	print_operations(t_list *oprs);
 int		markup_all(t_stack *a, int (*markup)(t_stack *, t_elem *));
@@ -86,4 +134,22 @@ int		greater(t_stack *a, t_elem *markup_head);
 int 	by_index(t_stack *a, t_elem *markup_head);
 void	ft_lstaddnew(t_list **list, char *str);
 size_t	count_nodes(t_list *oprs);
+int 	check_duplicates(t_stack *a);
+
+void	put_pixel(t_mlx *m, t_point p);
+void	put_rectangle(t_mlx *m, t_point p, int width, int height);
+t_point	new_point(int x, int y, int color);
+void	drawing(t_stack *a, t_stack *b, t_list *oprs);
+int 	check(t_stack *a, t_stack *b);
+int		exit_program(void *param);
+void 	draw_stack(t_mlx *m, t_stack *stack, int x, int height);
+void	do_operation(t_mlx *m);
+void	draw_stacks(t_mlx *m);
+t_mlx	*drawing_init(t_stack *a, t_stack *b, t_list *oprs);
+int		deal_key(int keycode, t_mlx *mlx);
+void	mlx_hooks(t_mlx *m);
+int		get_light(int start, int end, float percentage);
+int		get_color(int color1, int color2, float percent);
+void	put_colors(t_mlx *m);
+size_t	find_max_index(t_stack *a);
 #endif

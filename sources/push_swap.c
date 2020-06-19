@@ -66,6 +66,13 @@ int main(int argc, char **argv)
 	t_list	*oprs_i;
 
 	init_stacks(&a, &b, argc, argv);
+	if (init_stacks(&a, &b, argc, argv))
+		print_error("Error");
+	if (check_duplicates(a))
+	{
+		free_stack(&a);
+		print_error("Error");
+	}
 	oprs_g = solve(a, b, greater);
 	free_stack(&a);
 	free_stack(&b);

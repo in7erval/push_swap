@@ -102,6 +102,9 @@ int 	contains_not_keep(t_elem *head)
 
 void	push_to_b(t_stack *a, t_stack *b, t_list **oprs, int (*markup)(t_stack *, t_elem *))
 {
+	t_elem *buf;
+
+	buf = a->head;
 	while (contains_not_keep(a->head))
 	{
 		if (try_to_sa(a, markup))

@@ -132,39 +132,118 @@ void	add_front(t_stack *stack, t_elem *elem)
 	stack->size++;
 }
 
-void	add_n_operations(t_list *oprs, int n, char *str)
+int 	ft_isnumber(char *str)
 {
-	while (n-- > 0)
-		ft_lstadd(&oprs, ft_lstnew(str, 0));
+	int i;
+
+	i = 0;
+	if (*str == '-' && *(str + 1) != 0 && ft_isdigit(*(str + 1)))
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return 0;
+		i++;
+	}
+	return 1;
 }
 
-void	init_stacks(t_stack **a, t_stack **b, int argc, char **argv)
+int 	check_args(int argc, char **argv, int isArgs)
+{
+	int i;
+	int number;
+	int count;
+
+	i = (isArgs == 1) ? 1 : 0;
+	while (i < argc)
+	{
+		if (!ft_isnumber(argv[i]))
+			return 0;
+		number = ft_atoi(argv[i]);
+		count = (number < 0) ? ft_count_of_digits(number) + 1 : ft_count_of_digits(number);
+		if (count != (int)ft_strlen(argv[i]) || (number == 0 && argv[i][0] != '0') || (number == -1 && argv[i][0] != '-'))
+			return (0);
+		i++;
+	}
+	return 1;
+}
+
+int 	check_duplicates(t_stack *a)
+{
+	t_elem *head;
+	t_elem *cur;
+
+	cur = a->head->next;
+	while (cur != a->head)
+	{
+		if (cur->value == a->head->value)
+			return 1;
+		cur = cur->next;
+	}
+	head = a->head->next;
+	while (head != a->head)
+	{
+		cur = a->head->next;
+		while (cur != a->head)
+		{
+			if (cur != head && cur->value == head->value)
+				return 1;
+			cur = cur->next;
+		}
+		head = head->next;
+	}
+	return 0;
+}
+
+static int 	init_stacks_string(t_stack **a, t_stack **b, char *str)
 {
 	int i;
 	char **split;
 
-	if (argc == 1)
-		print_error("Error");
-	*a = (t_stack *)malloc(sizeof(t_stack));
-	*b = (t_stack *)malloc(sizeof(t_stack));
+	i = count_words(str, ' ') - 1;
+	split = ft_strsplit(str, ' ');
+	if (!check_args(i + 1, split, 0))
+	{
+		free(*a);
+		free(*b);
+		return 1;
+	}
+	while (i >= 0)
+	{
+		add_front(*a, new_element(ft_atoi(split[i])));
+		free(split[i]);
+		i--;
+	}
+	free(split);
+	return 0;
+}
+
+int		init_stacks(t_stack **a, t_stack **b, int argc, char **argv) /* todo: error_management with malloc and free memory */
+{
+	int i;
+
+	if (argc == 1 || (argc != 2 && !check_args(argc, argv, 1)))
+		return 1;
+	if (!(*a = (t_stack *)malloc(sizeof(t_stack))))
+		return 1;
+	if (!(*b = (t_stack *)malloc(sizeof(t_stack))))
+	{
+		free(*a);
+		return 1;
+	}
 	i = argc - 1;
 	(*a)->size = 0;
 	(*b)->size = 0;
+	(*b)->head = NULL;
 	if (argc == 2)
 	{
-		i = count_words(argv[1], ' ') - 1;
-		split = ft_strsplit(argv[1], ' ');
-		while (i >= 0)
-		{
-			add_front(*a, new_element(ft_atoi(split[i])));
-			free(split[i]);
-			i--;
-		}
-		free(split);
+		if (init_stacks_string(a, b, argv[1]))
+			return 1;
 	} else
-		while (i-- > 0)
+		while (i > 0)
 			add_front(*a, new_element(ft_atoi(argv[i--])));
 	put_indexes(*a);
+	return 0;
 }
 
 t_elem	*pop(t_stack *stack)
@@ -183,28 +262,6 @@ t_elem	*pop(t_stack *stack)
 		a->prev = a;
 	}
 	return a;
-}
-
-void	print_stack_debug(t_stack *stack)
-{
-	t_elem *buf;
-
-	buf = stack->head;
-	ft_printf("PRINT STACK DEBUG %p\n", stack->head);
-	if (buf->keep == -1)
-		ft_printf("%2d {magenta}index:%2d keep:%+d {red}cur:%14p {green}next:%14p {yellow}prev:%14p{eoc}\n", buf->value, buf->index, buf->keep, buf, buf->next, buf->prev);
-	else
-		ft_printf("{cyan}%2d {magenta}index:%2d {cyan}keep:%+d {red}cur:%14p {green}next:%14p {yellow}prev:%14p{eoc}\n", buf->value, buf->index, buf->keep, buf, buf->next, buf->prev);
-	buf = buf->next;
-	while (buf != stack->head)
-	{
-		if (buf->keep == -1)
-			ft_printf("%2d {magenta}index:%2d keep:%+d {red}cur:%14p {green}next:%14p {yellow}prev:%14p{eoc}\n", buf->value, buf->index, buf->keep, buf, buf->next, buf->prev);
-		else
-			ft_printf("{cyan}%2d {magenta}index:%2d {cyan}keep:%+d {red}cur:%14p {green}next:%14p {yellow}prev:%14p{eoc}\n", buf->value, buf->index, buf->keep, buf, buf->next, buf->prev);
-		buf = buf->next;
-	}
-	ft_printf("\n");
 }
 
 void	print_stack(t_stack *stack)
@@ -258,7 +315,6 @@ void	print_stacks(t_stack *a, t_stack *b)
 		i--;
 	} while (elem_a != a->head || elem_b != b->head);
 	ft_putchar('\n');
-	//ft_printf("–––   –––\n a     b \n\n");
 }
 
 int		find_max(t_elem *a, t_elem *b)

@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-static	int check(t_stack *a, t_stack *b)
+int check(t_stack *a, t_stack *b)
 {
 	int		i;
 	t_elem	*elem;
@@ -40,8 +40,14 @@ int main(int argc, char **argv)
 	int		i = 0;
 
 	if (argc == 1)
-		return (0);
-	init_stacks(&a, &b, argc, argv);
+		return 0;
+	if (init_stacks(&a, &b, argc, argv))
+		print_error("Error");
+	if (check_duplicates(a))
+	{
+		free_stack(&a);
+		print_error("Error");
+	}
 	while (get_next_line(0, &str)) {
 		if (str == NULL || *str == 0)
 			break;
@@ -70,20 +76,23 @@ int main(int argc, char **argv)
 		else if (ft_strcmp(str, "rrr") == 0) {
 			reverse_rotate(a, NULL, NULL);
 			reverse_rotate(b, NULL, NULL);
+		} else {
+			free_stack(&a);
+			if (b->head)
+				free_stack(&b);
+			print_error("Error");
 		}
 		free(str);
 		i++;
-		print_stacks(a, b);
 	}
 	free(str);
-	//print_stacks(a, b);
 	if (check(a, b) == 1)
 		ft_putendl("OK");
 	else
 		ft_putendl("KO");
-	//ft_printf("Count: %d\n", i);
 	free_stack(&a);
-	free_stack(&a);
+	if (b->head)
+		free_stack(&b);
 	return (0);
 }
 
