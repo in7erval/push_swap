@@ -64,7 +64,7 @@ typedef struct			s_elem
 
 typedef struct			s_stack
 {
-	t_ele				*head;
+	t_elem				*head;
 	size_t				size;
 	t_elem				*markup;
 }						t_stack;
