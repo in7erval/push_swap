@@ -72,7 +72,6 @@ int		main(int argc, char **argv)
 	else
 		ft_putendl("KO");
 	free_stack(&a);
-	if (b->head)
-		free_stack(&b);
+	free_stack(&b);
 	return (0);
 }

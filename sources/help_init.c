@@ -72,6 +72,9 @@ static int	init_stacks_string(t_stack **a, t_stack **b, char *str)
 	{
 		free(*a);
 		free(*b);
+		while (i >= 0)
+			free(split[i--]);
+		free(split);
 		return (1);
 	}
 	while (i >= 0)
@@ -84,11 +87,22 @@ static int	init_stacks_string(t_stack **a, t_stack **b, char *str)
 	return (0);
 }
 
+static int	is_one_arg(char *str)
+{
+	while (*str)
+	{
+		if (*str == ' ')
+			return (1);
+		str++;
+	}
+	return (0);
+}
+
 int			init_stacks(t_stack **a, t_stack **b, int argc, char **argv)
 {
 	int i;
 
-	if (argc == 1 || (argc != 2 && !check_args(argc, argv, 1)))
+	if (argc == 1 || (!is_one_arg(argv[1]) && !check_args(argc, argv, 1)))
 		return (1);
 	if (!(*a = (t_stack *)malloc(sizeof(t_stack))))
 		return (1);
