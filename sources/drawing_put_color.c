@@ -12,53 +12,27 @@
 
 #include "push_swap.h"
 
-void	push(t_stack *from, t_stack *to, t_list **oprs, char *str)
+void	put_color(t_stack *stack, int color_from, int color_to, int max_index)
 {
-	t_elem *elem;
+	t_elem *cur;
 
-	if (from->size > 0 && from->head != NULL)
+	cur = stack->head;
+	if (cur != NULL)
 	{
-		elem = pop(from);
-		add_front(to, elem);
-		if (oprs)
-			ft_lstaddnew(oprs, str);
+		cur->color = get_color(color_from, color_to,
+				(float)cur->index / (float)max_index);
+		cur = cur->next;
+		while (cur != stack->head)
+		{
+			cur->color = get_color(color_from, color_to,
+					(float)cur->index / (float)max_index);
+			cur = cur->next;
+		}
 	}
 }
 
-void	swap(t_stack *stack, t_list **oprs, char *str)
+void	put_colors(t_mlx *m)
 {
-	t_elem *top;
-	t_elem *top_next;
-
-	if (stack->size == 2)
-	{
-		rotate(stack, NULL, NULL);
-		if (oprs)
-			ft_lstaddnew(oprs, str);
-		return ;
-	}
-	top = pop(stack);
-	top_next = pop(stack);
-	add_front(stack, top);
-	add_front(stack, top_next);
-	if (oprs)
-		ft_lstaddnew(oprs, str);
-}
-
-void	reverse_rotate(t_stack *stack, t_list **oprs, char *str)
-{
-	if (!stack || stack->size == 1 || stack->size == 0)
-		return ;
-	stack->head = stack->head->prev;
-	if (oprs)
-		ft_lstaddnew(oprs, str);
-}
-
-void	rotate(t_stack *stack, t_list **oprs, char *str)
-{
-	if (!stack || stack->size == 0 || stack->size == 1)
-		return ;
-	stack->head = stack->head->next;
-	if (oprs)
-		ft_lstaddnew(oprs, str);
+	put_color(m->a, m->color_from, m->color_to, m->max_index);
+	put_color(m->b, m->color_from, m->color_to, m->max_index);
 }

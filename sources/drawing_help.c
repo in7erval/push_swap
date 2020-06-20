@@ -12,30 +12,43 @@
 
 #include "push_swap.h"
 
-void 		put_colors(t_mlx *m)
+int		get_light(int start, int end, float percentage)
 {
-	t_elem *cur;
+	return ((1 - percentage) * start + percentage * end);
+}
 
-	cur = m->a->head;
-	if (cur != NULL)
+int		get_color(int color1, int color2, float percent)
+{
+	int r;
+	int g;
+	int b;
+
+	r = get_light((color1 >> 16) & 0xFF, (color2 >> 16) & 0xFF, percent);
+	g = get_light((color1 >> 8) & 0xFF, (color2 >> 8) & 0xFF, percent);
+	b = get_light(color1 & 0xFF, color2 & 0xFF, percent);
+	return ((r << 16) + (g << 8) + b);
+}
+
+t_point	new_point(int x, int y, int color)
+{
+	t_point p;
+
+	p.x = x;
+	p.y = y;
+	p.color = color;
+	return (p);
+}
+
+void	put_pixel(t_mlx *m, t_point p)
+{
+	int	i;
+
+	if (p.x >= 0 && p.x < (int)m->width && p.y >= 0 && p.y < (int)m->height)
 	{
-		cur->color = get_color(m->color_from, m->color_to, (float) cur->index / (float) m->max_index);
-		cur = cur->next;
-		while (cur != m->a->head)
-		{
-			cur->color = get_color(m->color_from, m->color_to, (float) cur->index / (float) m->max_index);
-			cur = cur->next;
-		}
-	}
-	cur = m->b->head;
-	if (cur != NULL)
-	{
-		cur->color = get_color(m->color_from, m->color_to, (float) cur->index / (float) m->max_index);
-		cur = cur->next;
-		while (cur != m->a->head)
-		{
-			cur->color = get_color(m->color_from, m->color_to, (float) cur->index / (float) m->max_index);
-			cur = cur->next;
-		}
+		i = (p.x * m->bits_per_pixel / 8) + (p.y * m->size_line);
+		m->data_addr[i] = p.color;
+		m->data_addr[++i] = p.color >> 8;
+		m->data_addr[++i] = p.color >> 16;
+		m->data_addr[++i] = 0;
 	}
 }

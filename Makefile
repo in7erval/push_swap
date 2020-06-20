@@ -28,8 +28,9 @@ SOURCES_DIRECTORY = ./sources/
 
 SOURCES_PUSH_SWAP_LIST = push_swap.c
 SOURCES_CHECKER_LIST = checker.c
-SOURCES_CHECKER_VISUAL_LIST = checker_visual.c drawing.c drawing_help.c
-SOURCES_LIST = help.c solve.c operations.c
+SOURCES_CHECKER_VISUAL_LIST = checker_visual.c drawing.c drawing_help.c drawing_help_2.c drawing_put_color.c
+SOURCES_LIST = help.c solve.c operations.c checker_helper.c help_2.c help_init.c help_stack.c help_stack_2.c \
+				solve_indexes.c solve_markup.c solve_opers.c solve_help.c
 
 SOURCES_PUSH_SWAP = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_PUSH_SWAP_LIST))
 SOURCES_CHECKER = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_CHECKER_LIST))

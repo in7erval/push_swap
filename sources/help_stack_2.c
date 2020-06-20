@@ -12,45 +12,20 @@
 
 #include "push_swap.h"
 
-void	print_error(char *s)
+t_elem		*pop(t_stack *stack)
 {
-	ft_putendl(s);
-	exit(1);
-}
+	t_elem *a;
 
-int		ft_abs(int i)
-{
-	return (i < 0 ? -i : i);
-}
-
-void	print_operations(t_list *oprs)
-{
-	t_list *first;
-
-	if (!oprs)
-		return ;
-	first = oprs;
-	while (oprs->next != NULL)
-		oprs = oprs->next;
-	while (oprs != first)
+	a = NULL;
+	if (stack)
 	{
-		ft_putendl(oprs->content);
-		oprs = oprs->prev;
+		a = stack->head;
+		stack->head->prev->next = stack->head->next;
+		stack->head->next->prev = stack->head->prev;
+		stack->head = stack->head->next;
+		stack->size--;
+		a->next = a;
+		a->prev = a;
 	}
-	ft_putendl(oprs->content);
-}
-
-size_t	count_nodes(t_list *oprs)
-{
-	t_list *node;
-	size_t i;
-
-	i = 0;
-	node = oprs;
-	while (node)
-	{
-		node = node->next;
-		i++;
-	}
-	return (i);
+	return (a);
 }

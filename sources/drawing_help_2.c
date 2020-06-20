@@ -12,67 +12,68 @@
 
 #include "push_swap.h"
 
-int		check(t_stack *a, t_stack *b)
+void	mlx_hooks(t_mlx *m)
 {
-	int		i;
-	t_elem	*elem;
-
-	i = 1;
-	if (b->size != 0)
-		return (0);
-	if (a->head->next->value < a->head->value)
-		return (0);
-	elem = a->head->next;
-	while (elem != a->head)
-	{
-		if (elem->value < elem->prev->value)
-			return (0);
-		elem = elem->next;
-	}
-	return (1);
+	mlx_hook(m->win, 17, 0, exit_program, m);
+	mlx_hook(m->win, 2, 0, deal_key, m);
 }
 
-void	do_oprs_checker(t_stack *a, t_stack *b)
+void	put_rectangle(t_mlx *m, t_point p, int width, int height)
 {
-	char	*str;
+	t_point draw;
 
-	while (get_next_line(0, &str))
+	draw = p;
+	while (draw.y < p.y + height)
 	{
-		if (str == NULL || *str == 0)
-			break ;
-		if (check_all(str, a, b) == 1)
+		draw.x = p.x;
+		while (draw.x < p.x + width)
 		{
-			free_stack(&a);
-			if (b->head)
-				free_stack(&b);
-			print_error("Error");
+			put_pixel(m, draw);
+			draw.x++;
 		}
-		free(str);
+		draw.y++;
 	}
-	free(str);
 }
 
-int		main(int argc, char **argv)
+int		deal_key(int keycode, t_mlx *mlx)
 {
-	t_stack	*a;
-	t_stack	*b;
+	if (keycode == KEY_ESC)
+		exit(0);
+	if ((keycode == KEY_ENTER || keycode == KEY_RIGHT) && mlx->oprs)
+		draw_stacks(mlx);
+	return (keycode);
+}
 
-	if (argc == 1)
-		return (0);
-	if (init_stacks(&a, &b, argc, argv))
-		print_error("Error");
-	if (check_duplicates(a))
-	{
-		free_stack(&a);
-		print_error("Error");
-	}
-	do_oprs_checker(a, b);
-	if (check(a, b) == 1)
+int		exit_program(void *param)
+{
+	t_mlx *m;
+
+	m = (t_mlx *)param;
+	if (check(m->a, m->b) == 1)
 		ft_putendl("OK");
 	else
 		ft_putendl("KO");
-	free_stack(&a);
-	if (b->head)
-		free_stack(&b);
-	return (0);
+	free_stack(&(m->a));
+	if (m->b->head)
+		free_stack(&(m->b));
+	free_list(&(m->oprs));
+	free(param);
+	exit(0);
+}
+
+size_t	find_max_index(t_stack *a)
+{
+	t_elem *cur;
+	size_t max;
+
+	cur = a->head;
+	max = cur->index;
+	cur = cur->next;
+	while (cur != a->head)
+	{
+		if (cur->index > max)
+			max = cur->index;
+		cur = cur->next;
+	}
+	return (max);
 }
