@@ -39,7 +39,7 @@ int		deal_key(int keycode, t_mlx *mlx)
 {
 	if (keycode == KEY_ESC)
 		exit(0);
-	if ((keycode == KEY_ENTER || keycode == KEY_RIGHT) && mlx->oprs)
+	if (keycode == KEY_ENTER || keycode == KEY_RIGHT)
 		draw_stacks(mlx);
 	return (keycode);
 }

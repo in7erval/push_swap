@@ -29,8 +29,8 @@
 # define SB	10
 # define SS	11
 
-# define WIDTH 500
-# define HEIGHT 500
+# define WIDTH 1000
+# define HEIGHT 800
 # define KEY_ESC 53
 # define KEY_ENTER 36
 # define KEY_A 0
