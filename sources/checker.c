@@ -14,10 +14,8 @@
 
 int		check(t_stack *a, t_stack *b)
 {
-	int		i;
 	t_elem	*elem;
 
-	i = 1;
 	if (b->size != 0)
 		return (0);
 	if (a->head->next->value < a->head->value)
@@ -45,6 +43,7 @@ void	do_oprs_checker(t_stack *a, t_stack *b)
 			free_stack(&a);
 			if (b->head)
 				free_stack(&b);
+			free(str);
 			print_error("Error");
 		}
 		free(str);
