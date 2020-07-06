@@ -76,6 +76,8 @@ t_elem	*new_element(int value)
 
 void	add_front(t_stack *stack, t_elem *elem)
 {
+	if (stack == NULL)
+		return ;
 	if (stack->head == NULL || stack->size == 0)
 		stack->head = elem;
 	else

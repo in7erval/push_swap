@@ -170,4 +170,5 @@ void					double_swap(t_stack *a, t_stack *b);
 void					double_rotate(t_stack *a, t_stack *b);
 void					double_reverse_rotate(t_stack *a, t_stack *b);
 int						check(t_stack *a, t_stack *b);
+int						init_stack(t_stack **a, t_stack **b);
 #endif

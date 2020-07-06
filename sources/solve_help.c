@@ -54,6 +54,7 @@ t_stack		*clone_stack(t_stack *a)
 
 	clone = (t_stack *)malloc(sizeof(t_stack));
 	clone->size = 0;
+	clone->head = NULL;
 	h = a->head->prev;
 	while (h != a->head)
 	{

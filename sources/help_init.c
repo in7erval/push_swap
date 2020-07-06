@@ -104,17 +104,9 @@ int			init_stacks(t_stack **a, t_stack **b, int argc, char **argv)
 
 	if (argc == 1 || (!is_one_arg(argv[1]) && !check_args(argc, argv, 1)))
 		return (1);
-	if (!(*a = (t_stack *)malloc(sizeof(t_stack))))
+	if (init_stack(a, b))
 		return (1);
-	if (!(*b = (t_stack *)malloc(sizeof(t_stack))))
-	{
-		free(*a);
-		return (1);
-	}
 	i = argc - 1;
-	(*a)->size = 0;
-	(*b)->size = 0;
-	(*b)->head = NULL;
 	if (argc == 2)
 	{
 		if (init_stacks_string(a, b, argv[1]))

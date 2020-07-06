@@ -97,3 +97,19 @@ int			by_index(t_stack *a, t_elem *markup_head)
 	}
 	return (i);
 }
+
+int			init_stack(t_stack **a, t_stack **b)
+{
+	if (!(*a = (t_stack *)malloc(sizeof(t_stack))))
+		return (1);
+	if (!(*b = (t_stack *)malloc(sizeof(t_stack))))
+	{
+		free(*a);
+		return (1);
+	}
+	(*a)->size = 0;
+	(*a)->head = NULL;
+	(*b)->size = 0;
+	(*b)->head = NULL;
+	return (0);
+}

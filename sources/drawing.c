@@ -55,15 +55,15 @@ void	draw_stack(t_mlx *m, t_stack *stack, int x, int height)
 	int		y;
 	int		width;
 
-	width = (stack->head->index == 0 ?
-			 (1 * m->width) / 2 : (stack->head->index * m->width)) / (2 * m->max_index);
+	width = (stack->head->index == 0 ? (1 * m->width) / 2 :
+			(stack->head->index * m->width)) / (2 * m->max_index);
 	put_rectangle(m, new_point(x, 0, stack->head->color), width, height);
 	head = stack->head->next;
 	y = height;
 	while (head != stack->head)
 	{
-		width = (head->index == 0 ?
-				(1 * m->width) / 2 : (head->index * m->width)) / (2 * m->max_index);
+		width = (head->index == 0 ? (1 * m->width) / 2 :
+				(head->index * m->width)) / (2 * m->max_index);
 		put_rectangle(m, new_point(x, y, head->color), width, height);
 		y += height;
 		head = head->next;
@@ -90,7 +90,7 @@ void	draw_stacks(t_mlx *m)
 	ft_bzero(m->data_addr, m->width * m->height * (m->bits_per_pixel / 8));
 	do_operation(m);
 	count = m->a->size + m->b->size;
-	height = (int) ((m->height * 1.0f) / count);
+	height = (int)((m->height * 1.0f) / count);
 	draw_stack(m, m->a, 0, height);
 	if (m->b->size > 0)
 		draw_stack(m, m->b, m->width / 2, height);
