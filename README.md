@@ -34,7 +34,7 @@ make visual
 ```
 ### Usage
 ```shell
-$ ARG=`./gen.sh 50`;./push_swap $ARG | ./checker_visual $ARG
+$ ARG=`./gen.sh 100`;./push_swap $ARG | ./checker_visual $ARG
 ```
 
 ![push_swap](https://github.com/in7erval/push_swap/blob/master/gif_pw.gif)
